@@ -1,13 +1,14 @@
 import { 
   createRoutesFromElements,
   createBrowserRouter,
+  createHashRouter,
   RouterProvider,
   Route
 } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import HistoryPage from './pages/HistoryPage';
 
-const router = createBrowserRouter(
+const router = createHashRouter(
   createRoutesFromElements(
     <Route>
       <Route path="/" element={<HomePage />} />
