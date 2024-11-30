@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ScoreRecord } from '../types/game';
+import { ScoreRecord } from './types';
 
-const HistoryPage = () => {
+const History = () => {
   const [scores, setScores] = useState<ScoreRecord[]>([]);
   const navigate = useNavigate();
 
@@ -15,9 +15,9 @@ const HistoryPage = () => {
   return (
     <div className="container mx-auto p-4 sm:p-8">
       <div className="flex flex-col sm:flex-row justify-between items-center mb-4 sm:mb-8">
-        <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-0">Score History</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-0">2048 Score History</h1>
         <button
-          onClick={() => navigate('/')}
+          onClick={() => navigate('/2048')}
           className="w-full sm:w-auto px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
         >
           Back to Game
@@ -92,4 +92,4 @@ const HistoryPage = () => {
   );
 };
 
-export default HistoryPage; 
+export default History;
