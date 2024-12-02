@@ -33,8 +33,8 @@ const games: GameItem[] = [
 const Home: React.FC = () => {
   const navigate = useNavigate();
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen bg-gray-100">
+      <div className="max-w-4xl mx-auto home-container">
         <h1 className="text-4xl font-bold text-center mb-12 text-gray-800">Game Hub</h1>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {games.map((game) => (
@@ -49,7 +49,7 @@ const Home: React.FC = () => {
               </div>
             </Link>
           ))}
-          </div>
+        </div>
       </div>
     </div>
   );

@@ -9,8 +9,9 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "build:github": "GITHUB_PAGES=true tsc && vite build",
     "preview": "vite preview",
-    "deploy": "gh-pages -d dist"
+    "deploy": "npm run build:github && gh-pages -d dist"
   },
   "dependencies": {
     "@types/react-router-dom": "^5.3.3",

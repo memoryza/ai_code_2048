@@ -82,6 +82,9 @@ const Tetris: React.FC = () => {
   const dropInterval = useRef<number>(1000);
   const [blockSize, setBlockSize] = useState(BASE_BLOCK_SIZE);
 
+  const touchStartRef = useRef<{ x: number; y: number } | null>(null);
+  const touchThreshold = 30;
+
   function getRandomPiece() {
     const pieces = Object.values(TETROMINOS);
     const piece = pieces[Math.floor(Math.random() * pieces.length)];
@@ -309,6 +312,56 @@ const Tetris: React.FC = () => {
     [gameState.gameOver, gameState.currentPiece, movePiece, rotatePiece]
   );
 
+  const handleTouchStart = useCallback((event: React.TouchEvent) => {
+    if (gameState.gameOver || isPaused) return;
+    event.preventDefault(); // 阻止默认行为
+    const touch = event.touches[0];
+    touchStartRef.current = {
+      x: touch.clientX,
+      y: touch.clientY
+    };
+  }, [gameState.gameOver, isPaused]);
+
+  const handleTouchMove = useCallback((event: React.TouchEvent) => {
+    event.preventDefault(); // 阻止页面滚动
+  }, []);
+
+  const handleTouchEnd = useCallback((event: React.TouchEvent) => {
+    if (!touchStartRef.current || gameState.gameOver || isPaused) return;
+    event.preventDefault(); // 阻止默认行为
+    
+    const touch = event.changedTouches[0];
+    const deltaX = touch.clientX - touchStartRef.current.x;
+    const deltaY = touch.clientY - touchStartRef.current.y;
+    
+    // 调整滑动灵敏度
+    const minSwipeDistance = 20; // 降低触发阈值
+    
+    if (Math.abs(deltaX) > minSwipeDistance || Math.abs(deltaY) > minSwipeDistance) {
+      if (Math.abs(deltaX) > Math.abs(deltaY)) {
+        // 水平滑动
+        if (deltaX > 0) {
+          movePiece('right');
+        } else {
+          movePiece('left');
+        }
+      } else {
+        // 垂直滑动
+        if (deltaY < 0) {
+          // 向上滑动，旋转方块
+          if (gameState.currentPiece) {
+            rotatePiece(gameState.currentPiece);
+          }
+        } else {
+          // 向下滑动，加速下落
+          movePiece('down');
+        }
+      }
+    }
+    
+    touchStartRef.current = null;
+  }, [gameState.currentPiece, gameState.gameOver, isPaused, movePiece, rotatePiece]);
+
   const update = useCallback(
     (time: number) => {
       const deltaTime = time - lastTimeRef.current;
@@ -364,18 +417,34 @@ const Tetris: React.FC = () => {
 
   useEffect(() => {
     window.addEventListener('keydown', handleKeyDown);
-    requestRef.current = requestAnimationFrame(update);
-
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
-      if (requestRef.current) {
-        cancelAnimationFrame(requestRef.current);
-      }
     };
-  }, [handleKeyDown, update]);
+  }, [handleKeyDown]);
 
   return (
-    <div className="game-container">
+    <div 
+      className="tetris-container"
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+      style={{
+        touchAction: 'none', // 禁用浏览器默认触摸行为
+        WebkitTouchCallout: 'none', // 禁用 iOS 触摸回调
+        WebkitUserSelect: 'none', // 禁用选择
+        userSelect: 'none',
+        width: '100%',
+        height: '100%'
+      }}
+    >
+      <canvas
+        ref={canvasRef}
+        width={BOARD_WIDTH * blockSize}
+        height={BOARD_HEIGHT * blockSize}
+        style={{
+          touchAction: 'none' // 确保 canvas 也禁用默认触摸行为
+        }}
+      />
       <div className="game-header">
         <h1>Tetris</h1>
         <div className="score-container">
@@ -390,8 +459,6 @@ const Tetris: React.FC = () => {
         <button onClick={() => navigate('/tetris/history')}>History</button>
         <button onClick={() => navigate('/')}>Back to Home</button>
       </div>
-
-      <canvas ref={canvasRef} className="game-canvas" />
 
       {gameState.gameOver && (
         <div className="game-over">

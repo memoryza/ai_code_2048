@@ -1,17 +1,33 @@
 .maze-container {
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
-  min-height: 100vh;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
   background-color: #f0f0f0;
-  touch-action: none; /* 防止浏览器默认触摸行为 */
 }
 
 .game-area {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 1rem;
+  box-sizing: border-box;
   position: relative;
-  margin: 20px 0;
-  touch-action: none; /* 防止浏览器默认触摸行为 */
+}
+
+.game-area.portrait {
+  max-width: 95vw;
+  height: calc(100vh - 150px);
+}
+
+.game-area.landscape {
+  max-width: 90vw;
+  height: calc(100vh - 100px);
 }
 
 .game-canvas {
@@ -19,32 +35,9 @@
   border-radius: 4px;
   background-color: #fff;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  touch-action: none; /* 防止浏览器默认触摸行为 */
-  user-select: none; /* 防止文本选择 */
-  -webkit-user-select: none;
-  -webkit-touch-callout: none; /* 防止长按菜单 */
-}
-
-.game-controls {
-  display: flex;
-  gap: 10px;
-  margin-top: 20px;
-}
-
-.game-controls button {
-  padding: 10px 20px;
-  font-size: 16px;
-  border: none;
-  border-radius: 4px;
-  background-color: #2196F3;
-  color: white;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  touch-action: manipulation; /* 优化触摸响应 */
-}
-
-.game-controls button:hover {
-  background-color: #1976D2;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
 }
 
 .game-won {
@@ -52,16 +45,45 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: rgba(255, 255, 255, 0.9);
-  padding: 20px;
-  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.95);
+  padding: 2rem;
+  border-radius: 12px;
   text-align: center;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 10;
 }
 
 .game-won h2 {
-  color: #4CAF50;
-  margin-bottom: 10px;
+  margin: 0 0 1rem 0;
+  color: #2196F3;
+  font-size: clamp(1.5rem, 5vw, 2rem);
+}
+
+.game-controls {
+  width: 100%;
+  padding: 1rem;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(5px);
+}
+
+.game-controls button {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  background-color: #2196F3;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s;
+  min-width: 120px;
+}
+
+.game-controls button:active {
+  background-color: #1976D2;
+  transform: translateY(1px);
 }
 
 .game-instructions {
@@ -75,4 +97,39 @@ h1 {
   color: #333;
   margin-bottom: 20px;
   user-select: none;
+}
+
+/* 移动端优化 */
+@media (max-width: 768px) {
+  .game-area {
+    padding: 0.5rem;
+  }
+  
+  .game-controls button {
+    padding: 0.5rem 1rem;
+    min-width: 100px;
+  }
+  
+  .game-won {
+    padding: 1.5rem;
+    width: 80%;
+  }
+}
+
+/* 触摸设备优化 */
+@media (hover: none) {
+  .game-canvas {
+    touch-action: none;
+  }
+  
+  .game-controls button {
+    min-height: 44px; /* 确保触摸目标足够大 */
+  }
+}
+
+/* 适配刘海屏 */
+@supports (padding: max(0px)) {
+  .game-controls {
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
 }

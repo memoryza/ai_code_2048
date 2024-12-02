@@ -2,8 +2,10 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from 'path'
 
+
+
 export default defineConfig({
-  base: '/',
+  base: 'ai_code_games',
   plugins: [react()],
   resolve: {
     alias: {
@@ -50,13 +52,14 @@ export default defineConfig({
         assetFileNames: 'assets/[ext]/[name]-[hash].[ext]'
       }
     },
-    // 设置chunk警告大小限制
-    chunkSizeWarningLimit: 1000,
-    // 启用源码映射
     sourcemap: true,
-    // CSS 代码分割
+    // 启用 CSS 代码分割
     cssCodeSplit: true,
-    // 启用 CSS 压缩
-    cssMinify: true
+    // 启用 CSS 模块化
+    cssMinify: true,
+  },
+  server: {
+    // 配置开发服务器以支持 BrowserRouter
+    historyApiFallback: true
   }
 })
