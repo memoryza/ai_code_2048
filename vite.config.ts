@@ -5,7 +5,7 @@ import path from 'path'
 
 
 export default defineConfig({
-  base: 'ai_code_games',
+  base: '/ai_code_games/',
   plugins: [react()],
   resolve: {
     alias: {
