@@ -45,11 +45,11 @@ export default defineConfig({
           }
         },
         // 配置chunk文件输出格式
-        chunkFileNames: 'assets/js/[name]-[hash].js',
+        chunkFileNames: 'ai_code_games/assets/js/[name]-[hash].js',
         // 配置入口文件输出格式
-        entryFileNames: 'assets/js/[name]-[hash].js',
+        entryFileNames: 'ai_code_games/assets/js/[name]-[hash].js',
         // 配置静态资源文件输出格式
-        assetFileNames: 'assets/[ext]/[name]-[hash].[ext]'
+        assetFileNames: 'ai_code_games/assets/[ext]/[name]-[hash].[ext]'
       }
     },
     sourcemap: true,
